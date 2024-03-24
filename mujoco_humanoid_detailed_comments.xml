@@ -1,0 +1,110 @@
+<mujoco model="BaseHumanoidRobot">
+    <!-- 时间步长为0.005秒 -->
+    <option timestep="0.005" />
+
+    <!-- 定义了模型中使用的纹理、材料和其它资源 -->
+    <!-- <texture> 定义了用于渲染的纹理，如天空盒、机器人身体的纹理等。 -->
+    <!-- <material> 定义了材质，关联了纹理并设置了颜色等属性。 -->
+    <asset>
+        <texture type="skybox" builtin="gradient" rgb1=".3 .5 .7" rgb2="0 0 0" width="512"
+            height="512" />
+        <texture name="body" type="cube" builtin="flat" mark="cross" width="127" height="1278"
+            rgb1="0.8 0.6 0.4" rgb2="0.8 0.6 0.4" markrgb="1 1 1" random="0.01" />
+        <material name="body" texture="body" texuniform="true" rgba="0.8 0.6 .4 1" />
+        <texture name="grid" type="2d" builtin="checker" width="512" height="512" rgb1=".1 .2 .3"
+            rgb2=".2 .3 .4" />
+        <material name="grid" texture="grid" texrepeat="1 1" texuniform="true" reflectance=".2" />
+    </asset>
+
+    <!-- 定义了默认的几何形状、关节和其他元素的属性。 -->
+    <!-- <motor> 定义了默认的电机属性，如控制范围和控制是否受限。 -->
+    <!-- <geom> 定义了默认的几何体属性，如形状、摩擦系数、材质等。 -->
+    <!-- <joint> 定义了默认的关节属性，如阻尼、刚度、限位等。 -->
+    <default>
+        <motor ctrlrange="-1 1" ctrllimited="true" />
+        <default class="body">
+            <geom type="capsule" condim="1" friction=".7" solimp=".9 .99 .003" solref=".015 1"
+                material="body" />
+            <joint type="hinge" damping=".2" stiffness="1" armature=".01" limited="true"
+                solimplimit="0 .99 .01" />
+            <default class="big_joint">
+                <joint damping="5" stiffness="10" />
+                <default class="big_stiff_joint">
+                    <joint stiffness="20" />
+                </default>
+            </default>
+        </default>
+    </default>
+
+    <!-- 定义了视觉设置，如渲染质量、阴影大小、全局分辨率等。 -->
+    <visual>
+        <map force="0.1" zfar="30" />
+        <rgba haze="0.15 0.25 0.35 1" />
+        <quality shadowsize="4096" />
+        <global offwidth="800" offheight="800" />
+    </visual>
+
+    <!-- 定义了模型的世界体，包括了所有的刚体、关节、几何体、传感器等。 -->
+    <worldbody>
+        <!-- 定义地面的几何体 -->
+        <geom name="floor" size="0 0 .05" type="plane" material="grid" condim="3" />
+        <!-- 定义一个聚光灯 -->
+        <!-- 它的位置在(0, -20, 4)处，即机器人躯干下方20单位处，向上4单位 -->
+        <!-- 聚光灯的颜色为白色，漫反射系数为0.8，镜面反射系数为0.3，切光角为10度 -->
+        <!-- 它会跟踪名为"torso"的刚体的中心  -->
+        <light name="spotlight" mode="targetbodycom" target="torso"
+            diffuse=".8 .8 .8" specular="0.3 0.3 0.3" pos="0 -20 4" cutoff="10" />
+        <!-- 定义躯干刚体 -->
+        <body name="torso" pos="0 0 1.5" childclass="body">
+            <!-- 定义了一个名为"top"的光源，它的位置在(0, 0, 2)处，即躯干正上方2单位处。这个光源会跟踪躯干的中心。 -->
+            <light name="top" pos="0 0 2" mode="trackcom" />
+            <!-- 定义了一个名为"back"的摄像头 -->
+            <!-- 它的位置在(-3, 0, 1)处，即躯干后方3单位处，高度1单位 -->
+            <!-- 摄像头的视野方向是沿着y轴负方向看，x轴正方向是向上的。它会跟踪躯干的中心。 -->
+            <camera name="back" pos="-3 0 1" xyaxes="0 -1 0 1 0 2" mode="trackcom" />
+            <!-- 定义了一个名为"side"的摄像头 -->
+            <!-- 它的位置在(0, -3, 1)处，即躯干左侧3单位处，高度1单位 -->
+            <!-- 摄像头的视野方向是沿着x轴正方向看，y轴正方向是向上的。它会跟踪躯干的中心。 -->
+            <camera name="side" pos="0 -3 1" xyaxes="1 0 0 0 1 2" mode="trackcom" />
+            <!-- 定义了一个名为"root"的根关节，它允许躯干在空间中自由移动。 -->
+            <freejoint name="root" />
+            <!-- 定义了一个名为"torso"的几何体，它是一个胶囊形状，表示躯干的主体。其起始点在(0, -0.07, 0)，终点在(0, 0.07, 0)，大小为0.07单位。 -->
+            <geom name="torso" fromto="0 -.07 0 0 .07 0" size=".07" />
+            <!-- 定义了一个名为"upper_waist"的几何体，它是一个胶囊形状，表示躯干的上腰部。其起始点和终点定义了上腰部的位置和大小，大小为0.06单位。 -->
+            <geom name="upper_waist" fromto="-.01 -.06 -.12 -.01 .06 -.12" size=".06" />
+            <!-- 定义了一个名为"head"的刚体，表示头部，其位置在(0, 0, 0.19)处，即躯干正上方0.19单位。 -->
+            <body name="head" pos="0 0 .19">
+                <!-- 头部是一个球形几何体，大小为0.09单位。 -->
+                <geom name="head" type="sphere" size=".09" />
+                <!-- 定义一个名为"egocentric"的摄像头 -->
+                <!-- 它的位置在(0.09, 0, 0)处，即头部前方0.09单位处，视野方向是沿着y轴负方向看，x轴正方向是向前的 -->
+                <!-- 它会跟踪头部的中心，并且有一个80度的视野角。 -->
+                <camera name="egocentric" pos=".09 0 0" xyaxes="0 -1 0 .1 0 1" fovy="80" />
+            </body>
+        </body>
+        <!-- 定义右髋关节刚体 -->
+        <body name="right_hip_1" pos="0 0 0.090546133">
+            <!-- 定义了一个名为"right_hip_1"的球形关节，它允许在三个轴上旋转。关节位于右髋关节刚体的中心。 -->
+            <joint name="right_hip_1" pos="0 0 0" type="ball" />
+            <!-- 定义了一个胶囊形状的几何体，它表示右髋关节的外形。 -->
+            <!-- 几何体的位置在(0, -0.224, 0)，四元数(quat)定义了其方向（这里是一个45度角绕y轴旋转），胶囊的尺寸为直径0.05866单位，长度0.16单位。 -->
+            <geom pos="0 -0.224 0" quat="0.707107 -0.707107 0 0" type="capsule" size="0.05866 0.16" />
+            <!-- 定义右膝关节刚体 -->
+            <body name="right_knee_1" pos="0 -0.449648 0">
+                <!-- 定义了一个名为"right_knee_1"的关节，它允许沿着z轴旋转，并且有运动范围限制，从-π到0弧度，即只能向一个方向旋转。 -->
+                <joint name="right_knee_1" pos="0 0 0" axis="0 0 1" limited="true" range="-3.14 0" />
+                <!-- 定义了一个胶囊形状的几何体，表示右膝关节的外形 -->
+                <!-- 几何体的位置在(0, -0.2133, 0)，四元数定义了其方向（45度角绕y轴旋转），胶囊的尺寸为直径0.0533单位，长度0.16533单位。 -->
+                <geom pos="0 -0.2133 0" quat="0.707107 -0.707107 0 0" type="capsule" size="0.0533 0.16533" />
+                <!-- 定义右踝关节刚体 -->
+                <body name="right_ankle_1" pos="0 -0.43719466 0">
+                    <!-- 定义了一个名为"right_ankle_1"的球形关节，它允许在三个轴上旋转。关节位于右踝关节刚体的中心。 -->
+                    <joint name="right_ankle_1" pos="0 0 0" type="ball" />
+                    <!-- 定义了一个盒子形状的几何体，表示右脚的外形 -->
+                    <!-- 几何体的位置在(0.048, -0.024, 0)，盒子的大小为长0.0944单位，宽0.02933单位，高0.048单位。RGBA颜色设置为绿色，并且透明度为0.5。 -->
+                    <geom pos="0.048 -0.024 0" type="box" size="0.0944 0.02933 0.048" rgba="0 1 0 0.5" />
+                </body>
+            </body>
+        </body>
+    </worldbody>
+</mujoco>
