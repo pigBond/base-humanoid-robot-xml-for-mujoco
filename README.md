@@ -1,0 +1,1 @@
+# base-humanoid-robot-xml-for-mujoco
