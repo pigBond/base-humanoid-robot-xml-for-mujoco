@@ -88,3 +88,31 @@ mujoco_humanoid_detailed_comments.xml 为mujoco官方提供的humanoid模型的�
   
 
   每个`motor`元素都通过`gear`属性指定了与关节连接的齿轮比，这是电机输出力和关节运动速度之间的比例。通过`joint`属性，每个电机都与一个特定的关节相关联，从而控制该关节的运动。电机的其他属性（如控制范围和控制是否受限）在`default`部分中进行了定义。
+  
+  ```xml
+      <actuator>
+          <motor name="abdomen_y"       gear="40"  joint="abdomen_y"/>
+          <motor name="abdomen_z"       gear="40"  joint="abdomen_z"/>
+          <motor name="abdomen_x"       gear="40"  joint="abdomen_x"/>
+          <motor name="right_hip_x"     gear="40"  joint="right_hip_x"/>
+          <motor name="right_hip_z"     gear="40"  joint="right_hip_z"/>
+          <motor name="right_hip_y"     gear="120" joint="right_hip_y"/>
+          <motor name="right_knee"      gear="80"  joint="right_knee"/>
+          <motor name="right_ankle_x"   gear="20"  joint="right_ankle_x"/>
+          <motor name="right_ankle_y"   gear="20"  joint="right_ankle_y"/>
+          <motor name="left_hip_x"      gear="40"  joint="left_hip_x"/>
+          <motor name="left_hip_z"      gear="40"  joint="left_hip_z"/>
+          <motor name="left_hip_y"      gear="120" joint="left_hip_y"/>
+          <motor name="left_knee"       gear="80"  joint="left_knee"/>
+          <motor name="left_ankle_x"    gear="20"  joint="left_ankle_x"/>
+          <motor name="left_ankle_y"    gear="20"  joint="left_ankle_y"/>
+          <motor name="right_shoulder1" gear="20"  joint="right_shoulder1"/>
+          <motor name="right_shoulder2" gear="20"  joint="right_shoulder2"/>
+          <motor name="right_elbow"     gear="40"  joint="right_elbow"/>
+          <motor name="left_shoulder1"  gear="20"  joint="left_shoulder1"/>
+          <motor name="left_shoulder2"  gear="20"  joint="left_shoulder2"/>
+          <motor name="left_elbow"      gear="40"  joint="left_elbow"/>
+        </actuator>
+  ```
+  
+  
