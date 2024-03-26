@@ -60,11 +60,11 @@
             </body>
             <body name="lower_waist" pos="-.01 0 -.26">
                 <geom name="lower_waist" fromto="0 -.06 0 0 .06 0" size=".06" rgba="1 0.6 0 1" />
-                <joint name="abdomen_z" pos="0 0 .065" axis="0 0 1" range="-45 45"
+                <joint name="pelvis_z" pos="0 0 .065" axis="0 0 1" range="-45 45"
                     class="big_stiff_joint" />
-                <joint name="abdomen_y" pos="0 0 .065" axis="0 1 0" range="-75 30" class="big_joint" />
+                <joint name="pelvis_y" pos="0 0 .065" axis="0 1 0" range="-75 30" class="big_joint" />
                 <body name="pelvis" pos="0 0 -.165">
-                    <joint name="abdomen_x" pos="0 0 .1" axis="1 0 0" range="-35 35"
+                    <joint name="pelvis_x" pos="0 0 .1" axis="1 0 0" range="-35 35"
                         class="big_joint" />
                     <geom name="butt" type="sphere" size="0.1" rgba="1 0 0 0.8" />
                     <body name="right_thigh" pos="0 -.1 -.1">
@@ -105,7 +105,7 @@
                                 <joint name="left_ankle_x" pos="0 0 .04" axis="1 0 .5"
                                     range="-50 50" stiffness="3" />
                                 <geom name="left_left_foot" fromto="-.07 .02 0 .14 .04 0"
-                                    size=".027" />
+                                    size=".027" rgba="0 0 1 1"/>
                                 <geom name="right_left_foot" fromto="-.07 0 0 .14 -.02 0"
                                     size=".027" />
                             </body>
@@ -145,9 +145,9 @@
     </worldbody>
 
     <actuator>
-        <motor name="abdomen_y"       gear="40"  joint="abdomen_y"/>
-        <motor name="abdomen_z"       gear="40"  joint="abdomen_z"/>
-        <motor name="abdomen_x"       gear="40"  joint="abdomen_x"/>
+        <motor name="pelvis_y"       gear="40"  joint="pelvis_y"/>
+        <motor name="pelvis_z"       gear="40"  joint="pelvis_z"/>
+        <motor name="pelvis_x"       gear="40"  joint="pelvis_x"/>
         <motor name="right_hip_x"     gear="40"  joint="right_hip_x"/>
         <motor name="right_hip_z"     gear="40"  joint="right_hip_z"/>
         <motor name="right_hip_y"     gear="120" joint="right_hip_y"/>
